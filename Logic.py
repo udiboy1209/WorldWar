@@ -122,7 +122,8 @@ class node:
     def changetroops_final( self, number_move , initial , valid , Cmove):
         if initial.occupant == self.occupant :
             self.number = number_move + self.number
-            if CMove == True :
+            self.allowed = number_move + self.allowed
+            if Cmove == True :
                 self.cannon += 1
                 initial.canon -= 1
         elif valid == 1:
@@ -142,8 +143,8 @@ class node:
         elif valid == 2:
             if Cmove == False :
                 if self.fortress == 0:
-                    self.number = number_move + self.number - 2*int((self.number)/10)
-                    self.occupant = initital.occupant
+                    self.number = number_move - int((self.number)/2)
+                    self.occupant = initial.occupant
 
                 else:
                     print "Change"##############################
@@ -215,7 +216,6 @@ def move( initial , final , move, Cmove, cannon , fortress ):
         else:
             initial.cannon_time = 0
             initial.allowed -= cannon_makers
-            return True
 
     ## Fortress Build
     elif fortress == 1:
@@ -224,12 +224,13 @@ def move( initial , final , move, Cmove, cannon , fortress ):
         else:
             initial.cannon_time = 0
             initial.allowed -= fortress_makers
-            return True
 
 
     else:
         Valid_type = final.Valid_attack( move , initial , Cmove )
         if Valid_type == 0:
+            print initial.allowed
+            print move
             print "Less Available to send than told"
             return False
 
@@ -238,9 +239,11 @@ def move( initial , final , move, Cmove, cannon , fortress ):
             return False
 
         else :
-            final.changetroops_final(move , initial.occupant , Valid_type)
-
-
+            final.changetroops_final(move , initial , Valid_type , Cmove)
+            initial.changetroops_ini(move , Cmove)
+            print final.allowed
+            print initial.allowed
+    return True 
 ##Return array of indices of adjacent levels
 
 ##Initiate Network
@@ -268,5 +271,3 @@ for j in range(level3):
     network.append(node(troops3, -1 , 7 ,  0 , cannon_ready , 0 , fortress_ready  , troops3, _node_axis_3[j][0],_node_axis_3[j][1]))
 for j in range(hq):
     network.append(node(troops4, -1 , 8 ,  0 , cannon_ready , 0 , fortress_ready  , troops4, _node_axis_4[j][0],_node_axis_4[j][1]))
-
-
