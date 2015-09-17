@@ -1,14 +1,23 @@
 #!/usr/bin/env python
 import pygame, sys
 from pygame import *
+from Logic import *
+import math
 
 pygame.init()
 
-window_w,window_h = (700,700)
-DISPLAYSURF = pygame.display.set_mode((window_w,window_h))
-pygame.display.set_caption('World War Chess!')
+# SIZES ##################
 
-# COLORS ##################
+WINDOW_W,WINDOW_H= (750,700)
+NODE_R = [15,20,30,40]
+
+
+##########################
+
+DISPLAYSURF = pygame.display.set_mode((WINDOW_W,WINDOW_H))
+pygame.display.set_caption('World War!')
+
+# COLORS #################
 
 WHITE = (255, 255, 255)
 GREEN = (0, 255, 0)
@@ -17,31 +26,53 @@ BLUE = (0, 0, 128)
 ##########################
 
 BASICFONT = pygame.font.Font(None, 20)
-BG = pygame.image.load("map.png")
+NODE_IMG = [pygame.image.load("img/node1.png"),
+    pygame.image.load("img/node2.png"),
+    pygame.image.load("img/node3.png"),
+    pygame.image.load("img/node4.png")]
+
+
+BG = pygame.image.load("img/map.png")
+
+###########################
+
+def get_hovered_node(pos):
+    for n in network:
+        lvl = 4-n.level if n.occupant>0 else n.level-5
+        if math.sqrt((n.x-pos[0])**2 + (n.y-pos[1])**2)<NODE_R[lvl]:
+            return n
+
+# STATE DATA ##############
+
+hovered=None
+selected_1=None
+selected_2=None
+
+###########################
 
 while True: # main game loop
-    DISPLAYSURF.blit(BG, (0,0))
-    txtimg=BASICFONT.render(text,True,BLUE)
-    DISPLAYSURF.blit(txtimg,(100,50))
 
-    if clicked:
-        pygame.draw.ellipse(DISPLAYSURF, GREEN, rect ,1)
-    else:
-        pygame.draw.ellipse(DISPLAYSURF, BLUE, big_rect ,1)
+    # UPDATE #######################
 
     for event in pygame.event.get():
         if event.type == QUIT:
             pygame.quit()
             sys.exit()
-        elif event.type == MOUSEBUTTONUP:
-            mousepos = event.pos
-            if rect.collidepoint(mousepos[0],mousepos[1]):
-                clicked = False if clicked else True
-        elif clicked and event.type == KEYUP:
-            if event.key == K_RETURN:
-                clicked = False if clicked else True
-                text=""
-            else:
-                text+=str(event.key)
+        elif event.type ==  MOUSEMOTION:
+            hovered=get_hovered_node(event.pos)
 
+    if hovered is not None:
+        print n.level, n.x, n.y
+
+    ################################
+
+
+    # DISPLAY ######################
+    DISPLAYSURF.blit(BG, (0,0))
+    for n in network:
+        lvl = 4-n.level if n.occupant>0 else n.level-5
+        DISPLAYSURF.blit(NODE_IMG[lvl], (n.x-NODE_R[lvl]/2, n.y-NODE_R[lvl]/2))
     pygame.display.update()
+
+    ################################
+
