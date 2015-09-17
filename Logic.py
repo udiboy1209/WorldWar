@@ -108,6 +108,7 @@ class node:
         self.number = number
         self.occupant = occupant
         self.level = level
+        self.rank = 4-self.level if self.occupant>0 else self.level-5
         self.cannon = 0
         self.fortress = 0
         self.cannon_time = -1
@@ -241,15 +242,16 @@ def move( initial , final , move, Cmove, cannon , fortress ):
 
 
 ##Return array of indices of adjacent levels
-def adjacent_levels ( ref , network):
-    adjacent = []
-    for i in range(2*total_levels):
-        if( abs(ref.level - network[i].level)) < 2:
-            adjacent.append(i)
-    return adjacent
 
 ##Initiate Network
 network = []
+def adjacent_levels ( ref):
+    adjacent = []
+    for i in range(2*total_levels):
+        if( abs(ref.level - network[i].level)) < 2:
+            adjacent.append(network[i])
+    return adjacent
+
 for j in range(hq):
     network.append(node(troops4, 1 , 1 , 0 , cannon_ready , 0 , fortress_ready  , troops4, _node_ally_4[j][0],_node_ally_4[j][1]))
 for j in range(level3):
