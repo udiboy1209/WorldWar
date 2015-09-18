@@ -110,6 +110,14 @@ class WorldWar(Frame):
                 for n in Logic.adjacent_levels(self.selected):
                     self.canvas.create_line(self.selected.x,self.selected.y, n.x,n.y, arrow=tk.LAST, dash=(3,3))
 
+            if self.selected_2 is not None:
+                self.canvas.create_oval(self.selected_2.x-NODE_R[self.selected_2.rank]-5,
+                        self.selected_2.y-NODE_R[self.selected_2.rank]-5,
+                        self.selected_2.x+NODE_R[self.selected_2.rank]+5,
+                        self.selected_2.y+NODE_R[self.selected_2.rank]+5,
+                        width=3,
+                        outline="#FF0000")
+
     def update_menu(self):
         if self.menu is not None: self.menu.destroy()
         self.menu = Frame(self, width=200,height=WINDOW_H)
@@ -133,8 +141,16 @@ class WorldWar(Frame):
                 lbl_can = Label(self.menu, text=txt, image=self.FORTRESS, compound=tk.LEFT)
                 lbl_can.pack(fill=tk.X,padx=5,pady=5)
 
-            move = Button(self.menu, text="CONFIRM MOVE")
+            move = Button(self.menu, text="CONFIRM MOVE", command=self.confirm_move)
             move.pack(fill=tk.X, padx=5, pady=5)
+
+            return
+
+        if self.state==MOVE:
+            an = Label(self.menu, text="Select another node")
+            an.pack(fill=tk.X, padx=5,pady=5)
+            return
+
 
         if self.selected is not None:
             if  self.selected.cannon_time>-1:
@@ -152,47 +168,74 @@ class WorldWar(Frame):
                 lbl_can.pack(fill=tk.X,padx=5,pady=5)
 
             if self.player == self.selected.occupant:
-                move = Button(self.menu, text="MOVE")
+                move = Button(self.menu, text="MOVE", command=self.move)
                 move.pack(fill=tk.X, padx=5, pady=5)
 
                 if not self.selected.cannon:
-                    mk_can = Button(self.menu, text="MAKE CANNON")
+                    mk_can = Button(self.menu, text="MAKE CANNON", command=self.mk_cannon)
                     mk_can.pack(fill=tk.X, padx=5, pady=5)
 
                 if not self.selected.fortress:
-                    mk_ft = Button(self.menu, text="MAKE FORTRESS")
+                    mk_ft = Button(self.menu, text="MAKE FORTRESS", command=self.mk_fortress)
                     mk_ft.pack(fill=tk.X, padx=5, pady=5)
 
-    def move(self):
-        if self.state == SELECT:
-            self.state=MOVE
-            update_menu()
-            update_ui()
+    def confirm_move(self):
+        num = askinteger("Troops:","Enter number of troops :",parent=self)
+        if num==0:
+            showerror("Kuch to hila",parent=self)
         else:
-            num = askinteger("Troops:","Enter number of troops :",parent=self)
-            if num=0:
-                showerror("Kuch to hila",parent=self)
-            else:
-                if self.selected.cannon:
-                    if askyesno("Move cannon?",parent=self):
-                        Logic.move()
-                    else:
-                        Logic.move()
+            result=None
+            if self.selected.cannon:
+                if askyesno("Move cannon?",parent=self):
+                    result=Logic.move(self.selected,self.selected_2,num,True,0,0)
                 else:
-                    Logic.move()
+                    result=Logic.move(self.selected,self.selected_2,num,False,0,0)
+            else:
+                result=Logic.move(self.selected,self.selected_2,num,False,0,0)
+            if result[0]:
+                self.next_move()
+            else:
+                showerror(result[1])
+                self.selected_2=None
+                self.state=SELECT
+        self.update_ui()
+        self.update_menu()
+
+    def move(self):
+        self.state=MOVE
+        self.update_ui()
+        self.update_menu()
 
 
-    def mk_cannon():
+    def mk_cannon(self):
+        result=Logic.move(self.selected,None,0,False,1,0)
+        if result[0]:
+            self.next_move()
+        else:
+            showerror("Error", result[1])
 
-    def mk_fortress():
+    def mk_fortress(self):
+        result=Logic.move(self.selected,None,0,False,0,1)
+        if result[0]:
+            self.next_move()
+        else:
+            showerror("Error", result[1])
 
     def click(self, event):
         if self.state == SELECT:
             self.selected=get_node_at(event.x,event.y)
         else:
             self.selected_2=get_node_at(event.x,event.y)
+            if self.selected_2 == self.selected:
+                self.selected_2 = None
         self.update_ui()
         self.update_menu()
+
+    def next_move(self):
+        self.selected=None
+        self.selected_2=None
+        self.state=SELECT
+        self.player=PLAYER_AXIS if self.player is PLAYER_ALLY else PLAYER_ALLY
 
 def main():
 
