@@ -162,6 +162,15 @@ def get_hovered_node(pos):
         if math.sqrt((n.x-pos[0])**2 + (n.y-pos[1])**2)<NODE_R[n.rank]+5:
             return n
 
+def next_turn():
+    global selected_1,selected_2,game_state,menu_state,num_to_move,player
+    selected_1=None
+    selected_2=None
+    game_state=SELECT
+    menu_state=BLANK
+    num_to_move=0
+    player = PLAYER_AXIS if player is PLAYER_ALLY else PLAYER_ALLY
+
 # STATE DATA ##############
 
 hovered=None
@@ -174,7 +183,7 @@ player = PLAYER_ALLY
 
 move_pointer=None
 move_cannon=False
-num_to_move = ""
+num_to_move = 0
 
 ###########################
 
@@ -209,25 +218,33 @@ while True: # main game loop
             else: # Clicked on Menu
                 if menu_state == ACTION and RECT_MOVE.collidepoint(event.pos):
                     game_state=MOVE
+                elif menu_state == ACTION and RECT_MAKE_CANNON.collidepoint(event.pos):
+                    result = move(selected_1,None, 0, 0, 1, 0)
+                    if result[0]:
+                        next_turn()
+                    else:
+                        print result[1]
+                elif menu_state == ACTION and RECT_MAKE_FORTRESS.collidepoint(event.pos):
+                    result = move(selected_1,None, 0, 0, 0, 1)
+                    if result[0]:
+                        next_turn()
+                    else:
+                        print result[1]
 
         elif event.type == KEYUP:
             if game_state==MOVE_POPUP:
                 if event.key >= 48 and event.key < 58:
-                    num_to_move+=str(event.key-48)
+                    num_to_move=num_to_move*10 + event.key-48
                 elif event.key == K_BACKSPACE:
-                    num_to_move=num_to_move[:-1]
+                    num_to_move=num_to_move/10
                 elif event.key == K_ESCAPE:
                     game_state=SELECT
                     selected_2=None
-                    num_to_move=""
+                    num_to_move=0
                 elif event.key == K_RETURN:
-                    if move(selected_1,selected_2, int(num_to_move), 0, 0, 0):
-                        selected_1=None
-                        selected_2=None
-                        game_state=SELECT
-                        menu_state=BLANK
-                        num_to_move=""
-                        player = PLAYER_AXIS if player is PLAYER_ALLY else PLAYER_ALLY
+                    result = move(selected_1,selected_2, num_to_move, move_cannon, 0, 0)
+                    if result[0]:
+                        next_turn()
 
     ################################
 
@@ -271,7 +288,7 @@ while True: # main game loop
             pygame.draw.rect(DISPLAYSURF, RED, RECT_MOVE_CANNON,0)
         display_text("MOVE CANNON",(RECT_MOVE_CANNON.x+RECT_MOVE_CANNON.width/2+80, RECT_MOVE_CANNON.y+RECT_MOVE_CANNON.height/2), BLACK, MEDIUMFONT)
         display_text("Troops:",(RECT_POPUP.x+50,RECT_POPUP.y+30))
-        display_text(num_to_move,(RECT_POPUP.x+100,RECT_POPUP.y+30))
+        display_text(str(num_to_move),(RECT_POPUP.x+100,RECT_POPUP.y+30))
 
 
     if hovered not in (None,selected_1,selected_2):
@@ -282,7 +299,6 @@ while True: # main game loop
         if game_state==MOVE:
             for n in adjacent_levels(selected_1):
                 pygame.draw.line(DISPLAYSURF, BLACK, (selected_1.x, selected_1.y), (n.x,n.y), 2)
-        elif game_state==MOVE_POPUP:
 
         if game_state == MOVE and move_pointer is not None:
             pygame.draw.line(DISPLAYSURF, RED, (selected_1.x, selected_1.y), (move_pointer[0],move_pointer[1]), 4)

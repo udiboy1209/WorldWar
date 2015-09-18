@@ -129,18 +129,18 @@ class node:
                 self.cannon = 1
                 initial.canon = 0
 
-        ## initial and final node occupant different        
+        ## initial and final node occupant different
         else:
 
             ## No building goin on
             if self.cannon_time == -1 and self.fortress_time == -1:
-                
-                    ## Less Attackers than Defenders        
+
+                    ## Less Attackers than Defenders
                     if valid == 1:
-                        
+
                         ## Cannon Not Moved From Initial Node
                         if Cmove == False :
-                            
+
                             ## Final Node has No Fortress and No Cannon
                             if self.fortress == 0 and self.cannon == 0 :
                                 self.number = self.number - int((number_move)/2)
@@ -153,10 +153,10 @@ class node:
 
                             ## Final Node Has A Fortress
                             #### No Change
-                                
+
             #############CHECK FORTRESS POWER
 
-                        ## Cannon Moved From Initial Node        
+                        ## Cannon Moved From Initial Node
                         else :
 
                             ## Final Node has No Fortress and No Cannon
@@ -181,9 +181,9 @@ class node:
                             ## Final Node has A Fortress as well as A Cannon
                             else:
                                 self.cannon = 0
-                                
 
-                    ## More Attackers than Defenders 
+
+                    ## More Attackers than Defenders
                     elif valid == 2:
 
                         ## Cannon not moved from Initial Node
@@ -204,17 +204,17 @@ class node:
                                 else:
                                     self.number -= int(number_moved/4)
 
-                            ## Final Node has A Fortress and No Cannon 
+                            ## Final Node has A Fortress and No Cannon
                             elif self.fortress == 1 and self.cannon == 0:
                                 if number_move > int(1.5*(self.number)):
                                     self.occupant = initial.occupant
                                     self.number = number_move - int(3*self.number/4)
-                        
+
 
                                 else:
                                     self.number = self.number - int(number_move/4)
                                     self.fortress -= 1
-                                    
+
                             ## Final Node has A Fortress and A Cannon
                             else:
                                 if number_move > 2*(self.number):
@@ -245,7 +245,7 @@ class node:
                                 self.occupant = initial.occupant
 
                             ## Final Node has A Fortress And A Cannon
-                            elif self.fortress == 1 and self.cannon == 1: 
+                            elif self.fortress == 1 and self.cannon == 1:
                                 if number_move > int(1.5*(self.number)):
                                     self.occupant = initial.occupant
                                     self.number = number_move - int(3*self.number/4)
@@ -268,16 +268,16 @@ class node:
                             self.occupant = initial.occupant
 
 
-            ## Either cannon or fortress being made 
+            ## Either cannon or fortress being made
             elif self.cannon_time == -1 != self.fortress_time == -1:
                 self.allowed = self.number - self.cannon*cannon_makers - self.fortress*fortress_makers + self.number*self.cannon*0.5 + self.number*self.fortress*0.5
 
-                    ## Less Attackers than Defenders 
+                    ## Less Attackers than Defenders
                 if valid == 1 and number_move < self.allowed :
-                        
+
                         ## Cannon Not Moved From Initial Node
                         if Cmove == False :
-                            
+
                             ## Final Node has No Fortress and No Cannon
                             if self.fortress == 0 and self.cannon == 0 :
                                 self.number = self.number - int((number_move)/2)
@@ -290,10 +290,10 @@ class node:
 
                             ## Final Node Has A Fortress
                             #### No Change
-                                
+
             #############CHECK FORTRESS POWER
 
-                        ## Cannon Moved From Initial Node        
+                        ## Cannon Moved From Initial Node
                         else :
 
                             ## Final Node has No Fortress and No Cannon
@@ -322,12 +322,12 @@ class node:
                         self.allowed=self.number - 100
 
 
-                        
+
                 elif valid == 1 and self.allowed < number_move:
 
                         ## Cannon Not Moved From Initial Node
                         if Cmove == False :
-                            
+
                             ## Final Node has No Fortress and No Cannon
                             if self.fortress == 0 and self.cannon == 0 :
                                 self.number = self.number - int((number_move)/2)
@@ -340,11 +340,11 @@ class node:
 
                             ## Final Node Has A Fortress
                             #### No Change
-                    
-                                
+
+
             #############CHECK FORTRESS POWER
 
-                        ## Cannon Moved From Initial Node        
+                        ## Cannon Moved From Initial Node
                         else :
 
                             ## Final Node has No Fortress and No Cannon
@@ -370,15 +370,15 @@ class node:
                             else:
                                 self.cannon = 0
 
-                        self.cannon_time = -1 
+                        self.cannon_time = -1
                         self.fortress_time = -1
                         self.allowed=self.number
 
                 elif valid == 1 and self.allowed == number_move:
                     self.number = self.number - number_move
                     self.allowed = 0
-                        
-                    ## More Attackers than Defenders 
+
+                    ## More Attackers than Defenders
                 elif valid == 2:
 
                         ## Cannon not moved from Initial Node
@@ -399,17 +399,17 @@ class node:
                                 else:
                                     self.number -= int(number_moved/4)
 
-                            ## Final Node has A Fortress and No Cannon 
+                            ## Final Node has A Fortress and No Cannon
                             elif self.fortress == 1 and self.cannon == 0:
                                 if number_move > int(1.5*(self.number)):
                                     self.occupant = initial.occupant
                                     self.number = number_move - int(3*self.number/4)
-                        
+
 
                                 else:
                                     self.number = self.number - int(number_move/4)
                                     self.fortress -= 1
-                                    
+
                             ## Final Node has A Fortress and A Cannon
                             else:
                                 if number_move > 2*(self.number):
@@ -440,7 +440,7 @@ class node:
                                 self.occupant = initial.occupant
 
                             ## Final Node has A Fortress And A Cannon
-                            elif self.fortress == 1 and self.cannon == 1: 
+                            elif self.fortress == 1 and self.cannon == 1:
                                 if number_move > int(1.5*(self.number)):
                                     self.occupant = initial.occupant
                                     self.number = number_move - int(3*self.number/4)
@@ -455,21 +455,21 @@ class node:
                                 self.number = number_move - int((self.number)/2)
                                 self.occupant = initial.occupant
 
-                            self.cannon_time = -1 
+                            self.cannon_time = -1
                             self.fortress_time = -1
                             self.allowed = self.number
-                        
 
-            ## Both Cannon and Fortress are being made                
+
+            ## Both Cannon and Fortress are being made
             elif self.cannon_time != -1 and self.fortress_time != -1:
                 self.allowed = self.number - cannon_makers - fortress_makers
 
-                ## Less Attackers than Defenders 
+                ## Less Attackers than Defenders
                 if valid == 1 and number_move < self.allowed :
-                        
+
                         ## Cannon Not Moved From Initial Node
                         if Cmove == False :
-                            
+
                             ## Final Node has No Fortress and No Cannon
                             if self.fortress == 0 and self.cannon == 0 :
                                 self.number = self.number - int((number_move)/2)
@@ -482,10 +482,10 @@ class node:
 
                             ## Final Node Has A Fortress
                             #### No Change
-                                
+
             #############CHECK FORTRESS POWER
 
-                        ## Cannon Moved From Initial Node        
+                        ## Cannon Moved From Initial Node
                         else :
 
                             ## Final Node has No Fortress and No Cannon
@@ -512,13 +512,13 @@ class node:
                                 self.cannon = 0
 
                         self.allowed = self.number - cannon_makers - fortress_makers
-                        
-                        
+
+
                 elif valid == 1 and self.allowed < number_move:
 
                         ## Cannon Not Moved From Initial Node
                         if Cmove == False :
-                            
+
                             ## Final Node has No Fortress and No Cannon
                             if self.fortress == 0 and self.cannon == 0 :
                                 self.number = self.number - int((number_move)/2)
@@ -531,10 +531,10 @@ class node:
 
                             ## Final Node Has A Fortress
                             #### No Change
-                                
+
             #############CHECK FORTRESS POWER
 
-                        ## Cannon Moved From Initial Node        
+                        ## Cannon Moved From Initial Node
                         else :
 
                             ## Final Node has No Fortress and No Cannon
@@ -560,7 +560,7 @@ class node:
                             else:
                                 self.cannon = 0
 
-                        self.cannon_time = -1 
+                        self.cannon_time = -1
                         self.fortress_time = -1
                         self.allowed = self.number
 
@@ -568,8 +568,8 @@ class node:
                     self.number = self.number - number_move
                     self.allowed = 0
 
-                        
-                ## More Attackers than Defenders 
+
+                ## More Attackers than Defenders
                 elif valid == 2:
 
                         ## Cannon not moved from Initial Node
@@ -590,17 +590,17 @@ class node:
                                 else:
                                     self.number -= int(number_moved/4)
 
-                            ## Final Node has A Fortress and No Cannon 
+                            ## Final Node has A Fortress and No Cannon
                             elif self.fortress == 1 and self.cannon == 0:
                                 if number_move > int(1.5*(self.number)):
                                     self.occupant = initial.occupant
                                     self.number = number_move - int(3*self.number/4)
-                        
+
 
                                 else:
                                     self.number = self.number - int(number_move/4)
                                     self.fortress -= 1
-                                    
+
                             ## Final Node has A Fortress and A Cannon
                             else:
                                 if number_move > 2*(self.number):
@@ -631,7 +631,7 @@ class node:
                                 self.occupant = initial.occupant
 
                             ## Final Node has A Fortress And A Cannon
-                            elif self.fortress == 1 and self.cannon == 1: 
+                            elif self.fortress == 1 and self.cannon == 1:
                                 if number_move > int(1.5*(self.number)):
                                     self.occupant = initial.occupant
                                     self.number = number_move - int(3*self.number/4)
@@ -646,9 +646,9 @@ class node:
                                 self.number = number_move - int((self.number)/2)
                                 self.occupant = initial.occupant
 
-                        self.cannon_time = -1 
+                        self.cannon_time = -1
                         self.fortress_time = -1
-                        self.allowed = self.number    
+                        self.allowed = self.number
         return
 
 ##Changing Troops at Initial Location
@@ -660,7 +660,7 @@ class node:
 
         if self.number == 0:
             self.occupancy = 0
-            
+
         return
 
 ##Check Validity of Move
@@ -676,11 +676,11 @@ class node:
             if self.occupant == initial.occupant:
                 if self.cannon == 1:
                     return -2
-            
+
         if not initial.occupant == self.occupant:
             if self.number > number_move:
                 return 1
-            
+
         return 2
 
 ##Update Cannons and Fortresses
@@ -719,12 +719,12 @@ def move( initial , final , move, Cmove, cannon , fortress ):
 
         if initial.cannon == 1:
             return False , "Already Cannon Present"
-        
+
         else:
             initial.cannon_time = 0
             initial.allowed -= cannon_makers
             return True , "Cool"
-        
+
     ## Fortress Build
     elif fortress == 1:
         if initial.allowed < fortress_makers:  ##Cannon Fortress Successive
@@ -735,7 +735,7 @@ def move( initial , final , move, Cmove, cannon , fortress ):
 
         if initial.fortress == 1:
             return False , "Already Fortress Present"
-        
+
         else:
             initial.fortress_time = 0
             initial.allowed -= fortress_makers
@@ -745,7 +745,7 @@ def move( initial , final , move, Cmove, cannon , fortress ):
         Valid_type = final.Valid_attack( move , initial , Cmove )
         if Valid_type == 0:
             print initial.allowed
-            print move   
+            print move
             return False ,  "Less Available to send than told"
 
         elif Valid_type == -1:
@@ -754,7 +754,7 @@ def move( initial , final , move, Cmove, cannon , fortress ):
 
         elif Valid_type == -2:
             return False , "Already cannon present in final place"
-        
+
         else :
             final.changetroops_final(move , initial , Valid_type , Cmove)
             initial.changetroops_ini(move , Cmove)
